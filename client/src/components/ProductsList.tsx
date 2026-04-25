@@ -32,9 +32,9 @@ export default function ProductsList() {
                         {/* Header */}
                         <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
                             <tr>
-                                <th className="px-4 py-3">Name</th>
+                                <th className="px-4 py-3">Product Name</th>
                                 <th className="px-4 py-3">SBU Desc</th>
-                                <th className="px-4 py-3">Pack</th>
+                                <th className="px-4 py-3">Pack Size</th>
                                 <th className="px-4 py-3">Price</th>
                                 <th className="px-4 py-3">GST</th>
                                 <th className="px-4 py-3">Quote</th>
@@ -58,7 +58,7 @@ export default function ProductsList() {
                                         <td className="px-1 py-3 ">
                                             <div className=" xl:w-[400px]">
                                                 <h1 className=" font-medium text-gray-800">
-                                                    {p.name}
+                                                    {`${p.Product_Name} ${p.Product_Code}`}
                                                 </h1>
                                                 <p>HSN:{p.hsn} </p>
                                                 <p>CAS:{p.cas} </p>
@@ -82,7 +82,7 @@ export default function ProductsList() {
                                         </td>
 
                                         <td className="px-4 py-3  font-semibold text-gray-800">
-                                            {p.size || "-"} {p.pack_size}
+                                            {p.PackSize || "-"} {p.Pack_size_name}
                                         </td>
 
                                         {/* Price */}

@@ -6,27 +6,30 @@ import toast from "react-hot-toast"
 export default function ProductForm({ editData, setEditData }: any) {
     const { addProduct, editProduct } = useApp()
 
-    const [name, setName] = useState("")
+    const [Product_Name, setProduct_Name] = useState("")
+    const [Product_Code, setProduct_Code] = useState("")
     const [hsn, setHsn] = useState("")
     const [cas, setCas] = useState("")
     const [hazardous, setHazardous] = useState("NO")
     const [sbu_desc, setSbu_desc] = useState("")
-    const [size, setsize] = useState(0)
-    const [pack_size, setPack_size] = useState("pc")
+    const [PackSize, setPackSize] = useState("")
+    const [Pack_size_name, setPack_size_name] = useState("pc")
     const [price, setPrice] = useState<number>(0)
     const [gst, setGst] = useState(18)
 
     useEffect(() => {
         if (editData) {
-            setName(editData.name)
+            setProduct_Name(editData.Product_Name)
+            setProduct_Code(editData.Product_Code)
             setHsn(editData.hsn)
             setCas(editData.cas)
             setHazardous(editData.hazardous)
             setSbu_desc(editData.sbu_desc)
-            setsize(editData.size)
-            setPack_size(editData.pack_size)
+            setPackSize(editData.PackSize)
+            setPack_size_name(editData.Pack_size_name)
             setPrice(editData.price)
             setGst(editData.gst)
+            setProduct_Code(editData.Product_Code || "")
         }
     }, [editData])
 
@@ -37,13 +40,14 @@ export default function ProductForm({ editData, setEditData }: any) {
 
         const product = {
             id: editData ? editData.id : Date.now().toString(),
-            name,
+            Product_Name,
+            Product_Code,
             hsn,
             cas,
             hazardous,
             sbu_desc,
-            size,
-            pack_size,
+            PackSize: parseFloat(PackSize) || 0,
+            Pack_size_name,
             price,
             gst,
         }
@@ -58,13 +62,14 @@ export default function ProductForm({ editData, setEditData }: any) {
         }
 
         // reset form
-        setName("")
+        setProduct_Name("")
+        setProduct_Code("")
         setHsn("")
         setCas("")
         setHazardous("NO")
         setSbu_desc("")
-        setsize(0)
-        setPack_size("pc")
+        setPackSize("")
+        setPack_size_name("pc")
         setPrice(0)
         setGst(18)
     }
@@ -73,7 +78,7 @@ export default function ProductForm({ editData, setEditData }: any) {
             onSubmit={handleSubmit}
             className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-2xl space-y-4"
         >
-               <h2 className="text-xl font-semibold text-gray-700">
+            <h2 className="text-xl font-semibold text-gray-700">
                 {editData ? "Edit Product" : "Add Product"}
             </h2>
 
@@ -84,10 +89,21 @@ export default function ProductForm({ editData, setEditData }: any) {
                 </label>
                 <textarea
                     className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 outline-none"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={Product_Name}
+                    onChange={(e) => setProduct_Name(e.target.value)}
                 />
+                <div>
+                    <label className="block text-sm font-medium text-gray-600">
+                        Product Code
+                    </label>
+                    <input
+                        className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
+                        value={Product_Code}
+                        onChange={(e) => setProduct_Code(e.target.value)}
+                    />
+                </div>
             </div>
+
 
             {/* Grid Section */}
             <div className="grid grid-cols-2 gap-4">
@@ -164,15 +180,26 @@ export default function ProductForm({ editData, setEditData }: any) {
                     <div className="flex gap-2">
                         <input
                             className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
-                            value={size}
-                            onChange={(e) => setsize(+e.target.value)}
+                            value={PackSize}
+                            placeholder="0"
+                            onChange={(e) => {
+                                const value = e.target.value
+                                if (/^\d*\.?\d{0,5}$/.test(value)) {
+                                    setPackSize(value)
+                                }
+                            }}
                         />
                         <select
                             className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
-                            value={pack_size}
-                            onChange={(e) => setPack_size(e.target.value)}
+                            value={Pack_size_name}
+                            onChange={(e) => setPack_size_name(e.target.value)}
                         >
                             <option value="pc">Piece (pc)</option>
+                            <option value="nos">Numbers (nos)</option>
+                            <option value="roll">Roll</option>
+                            <option value="pkt">Packet (pkt)</option>
+                            <option value="kg">Kilogram (kg)</option>
+                            <option value="gm">Gram (gm)</option>
                             <option value="ml">Millilitre (ml)</option>
                             <option value="ltr">Litre (ltr)</option>
                         </select>
@@ -206,13 +233,12 @@ export default function ProductForm({ editData, setEditData }: any) {
             </div>
 
             {/* Button */}
-             <button
+            <button
                 type="submit"
-                className={`w-full text-white py-2 rounded-lg ${
-                    editData
-                        ? "bg-yellow-500 hover:bg-yellow-600"
-                        : "bg-blue-600 hover:bg-blue-700"
-                }`}
+                className={`w-full text-white py-2 rounded-lg ${editData
+                    ? "bg-yellow-500 hover:bg-yellow-600"
+                    : "bg-blue-600 hover:bg-blue-700"
+                    }`}
             >
                 {editData ? "Update Product" : "Add Product"}
             </button>

@@ -49,16 +49,17 @@ export default function Cart() {
 
             return {
                 ID: item.id,
-                Name: item.name,
+                Product_Name: item.Product_Name,
+                Product_Code:item.Product_Code,
                 HSN: item.hsn,
                 CAS: item.cas,
                 Hazardous: item.hazardous,
-                Description: item.sbu_desc,
-                GST: item.gst,
-                Pack_Size: item.pack_size,
-                Price: item.price,
+                Product_Description: item.sbu_desc,
+                Pack_Size: item.PackSize,
+                Pack_Size_Name:item.Pack_size_name ,
+                Product_Price: item.price,
                 Qty: item.qty,
-                Size: item.size,
+                GST: item.gst,
                 IGST: igst,
                 Total: itemTotal + igst
             };
@@ -97,7 +98,7 @@ export default function Cart() {
                     {/* Header */}
                     <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
                         <tr>
-                            <th className="px-4 py-3">Name</th>
+                            <th className="px-4 py-3">Product Name</th>
                             <th className="px-4 py-3">Qty</th>
                             <th className="px-4 py-3">Price</th>
                             <th className="px-4 py-3">GST</th>
@@ -120,7 +121,7 @@ export default function Cart() {
                                     <td className="px-2 py-3">
                                         <div className=" xl:w-[400px]">
                                             <h1 className=" font-medium text-gray-800">
-                                                {item.name}
+                                                {item.Product_Name}
                                             </h1>
                                             <p>HSN:{item.hsn} </p>
                                             <p>CAS:{item.cas} </p>
