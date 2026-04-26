@@ -28,12 +28,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     const editProduct = (updatedProduct: any) => {
         setProducts(prev =>
-            prev.map(p => (p.id === updatedProduct.id ? updatedProduct : p))
+            prev.map(p => (p.ID === updatedProduct.ID ? updatedProduct : p))
         );
     };
 
     const deleteProduct = (id: string) => {
-        setProducts(prev => prev.filter(p => p.id !== id));
+        setProducts(prev => prev.filter(p => p.ID !== id));
     };
 
     ///------------- CART ----------------
@@ -54,11 +54,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     const addToCart = (product: any) => {
         setCart(prev => {
-            const exists = prev.find(item => item.id === product.id);
+            const exists = prev.find(item => item.ID === product.ID);
 
             if (exists) {
                 return prev.map(item =>
-                    item.id === product.id
+                    item.ID === product.ID
                         ? { ...item, qty: item.qty + 1 }
                         : item
                 );
@@ -69,13 +69,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     };
 
     const removeFromCart = (id: string) => {
-        setCart(prev => prev.filter(item => item.id !== id));
+        setCart(prev => prev.filter(item => item.ID !== id));
     };
 
     const updateQty = (id: string, type: "inc" | "dec") => {
         setCart(prev =>
             prev.map(item => {
-                if (item.id === id) {
+                if (item.ID === id) {
                     const newQty =
                         type === "inc" ? item.qty + 1 : item.qty - 1;
                     return { ...item, qty: newQty > 0 ? newQty : 1 };

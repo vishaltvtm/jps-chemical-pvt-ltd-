@@ -25,41 +25,41 @@ export default function Cart() {
     }, []);
 
     const total = cart.reduce((sum: number, item: any) => {
-        return sum + item.price * item.qty
+        return sum + item.Product_Price * item.qty
     }, 0)
 
     const igst_total = cart.reduce((sum: number, item: any) => {
-        const itemTotal = item.price * item.qty
-        const igst = sum + (itemTotal * item.gst) / 100
+        const itemTotal = item.Product_Price * item.qty
+        const igst = sum + (itemTotal * item.GST) / 100
         return igst
     }, 0)
 
     const fullTotal = cart.reduce((sum: number, item: any) => {
-        const itemTotal = item.price * item.qty
-        const igst = (itemTotal * item.gst) / 100
-        return sum + igst + item.price * item.qty
+        const itemTotal = item.Product_Price * item.qty
+        const igst = (itemTotal * item.GST) / 100
+        return sum + igst + item.Product_Price * item.qty
     }, 0)
 
 
     /// --------------------------
     const exportToExcel = () => {
         const data = cart.map((item: any) => {
-            const itemTotal = item.price * item.qty;
-            const igst = (itemTotal * item.gst) / 100;
+            const itemTotal = item.Product_Price * item.qty;
+            const igst = (itemTotal * item.GST) / 100;
 
             return {
-                ID: item.id,
+                ID: item.ID,
                 Product_Name: item.Product_Name,
                 Product_Code:item.Product_Code,
-                HSN: item.hsn,
-                CAS: item.cas,
-                Hazardous: item.hazardous,
-                Product_Description: item.sbu_desc,
-                Pack_Size: item.PackSize,
-                Pack_Size_Name:item.Pack_size_name ,
-                Product_Price: item.price,
+                HSN: item.HSN,
+                CAS: item.CAS,
+                Hazardous: item.Hazardous,
+                Product_Description: item.Product_Description,
+                Pack_Size: item.Pack_Size,
+                Pack_Size_Name:item.Pack_Size_Name ,
+                Product_Price: item.Product_Price,
                 Qty: item.qty,
-                GST: item.gst,
+                GST: item.GST,
                 IGST: igst,
                 Total: itemTotal + igst
             };
@@ -110,29 +110,29 @@ export default function Cart() {
 
                     <tbody>
                         {cart.map((item: any) => {
-                            const itemTotal = item.price * item.qty
-                            const igst = (itemTotal * item.gst) / 100
+                            const itemTotal = item?.Product_Price * item?.qty
+                            const igst = (itemTotal * item?.GST) / 100
 
                             return (
                                 <tr
-                                    key={item.id}
+                                    key={item?.ID}
                                     className="border-t hover:bg-gray-50 transition"
                                 >
                                     <td className="px-2 py-3">
                                         <div className=" xl:w-[400px]">
                                             <h1 className=" font-medium text-gray-800">
-                                                {item.Product_Name}
+                                                {item?.Product_Name}
                                             </h1>
-                                            <p>HSN:{item.hsn} </p>
-                                            <p>CAS:{item.cas} </p>
+                                            <p>HSN:{item?.HSN} </p>
+                                            <p>CAS:{item?.CAS} </p>
                                             <p>
                                                 Hazardous : <span
-                                                    className={`px-2 py-1 text-xs rounded-full font-medium ${item.hazardous === "YES"
+                                                    className={`px-2 py-1 text-xs rounded-full font-medium ${item?.Hazardous === "YES"
                                                         ? "bg-red-100 text-red-600"
                                                         : "bg-green-100 text-green-600"
                                                         }`}
                                                 >
-                                                    {item.hazardous}
+                                                    {item?.Hazardous}
                                                 </span>
                                             </p>
 
@@ -141,31 +141,31 @@ export default function Cart() {
 
                                     <td className="px-2 py-3">
                                         <div className="flex items-center gap-2">
-                                            <button className="px-2 bg-gray-200 rounded" onClick={() => updateQty(item.id, "inc")} >+</button>
-                                            {item.qty}
-                                            <button className="px-2 bg-gray-200 rounded" onClick={() => updateQty(item.id, "dec")}>-</button>
+                                            <button className="px-2 bg-gray-200 rounded" onClick={() => updateQty(item?.ID, "inc")} >+</button>
+                                            {item?.qty}
+                                            <button className="px-2 bg-gray-200 rounded" onClick={() => updateQty(item?.ID, "dec")}>-</button>
                                         </div>
                                     </td>
 
                                     <td className="px-2 py-3">
-                                        ₹ {item.price.toLocaleString()}
+                                        ₹ {item?.Product_Price?.toLocaleString()}
                                     </td>
 
                                     <td className="px-2 py-3">
-                                        {item.gst}%
+                                        {item?.GST}%
                                     </td>
 
                                     <td className="px-2 py-3">
-                                        ₹ {igst.toFixed(2)}
+                                        ₹ {igst?.toFixed(2)}
                                     </td>
 
                                     <td className="px-2 py-3 font-semibold">
-                                        ₹ {(itemTotal + igst).toFixed(2)}
+                                        ₹ {(itemTotal + igst)?.toFixed(2)}
                                     </td>
 
                                     <td className="px-2 py-3">
                                         <button
-                                            onClick={() => removeFromCart(item.id)}
+                                            onClick={() => removeFromCart(item?.ID)}
                                             className="text-red-500 text-sm"
                                         >
                                             Remove

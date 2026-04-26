@@ -31,7 +31,7 @@ export default function Home() {
   return (
     <div className="p-5">
 
-      <div className="">
+      <div className=" max-w-9xl  p-6 lg:px-8">
         <HomeProductList />
 
       </div>
