@@ -37,18 +37,18 @@ export default function ProductsList() {
     }
   }, [search])
 
-   const filteredProducts = Array.isArray(products)
-  ? [...products].reverse().filter((p: any) => {
-        const query = debouncedSearch.toLowerCase();
+  const filteredProducts = Array.isArray(products)
+    ? [...products].reverse().filter((p: any) => {
+      const query = debouncedSearch.toLowerCase();
 
-        return (
-            String(p?.Product_Name || "").toLowerCase().includes(query) ||
-            String(p?.Product_Code || "").toLowerCase().includes(query) ||
-            String(p?.HSN || "").toLowerCase().includes(query) ||
-            String(p?.CAS || "").toLowerCase().includes(query)
-        );
+      return (
+        String(p?.Product_Name || "").toLowerCase().includes(query) ||
+        String(p?.Product_Code || "").toLowerCase().includes(query) ||
+        String(p?.HSN || "").toLowerCase().includes(query) ||
+        String(p?.CAS || "").toLowerCase().includes(query)
+      );
     })
-  : [];
+    : [];
 
 
   return (
@@ -69,26 +69,34 @@ export default function ProductsList() {
 
         {/* Edit Form */}
         {editData && (
-          <div className="bg-white p-4 rounded-lg shadow ">
-            <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50">
-              <div className="shadow w-full relative">
+          <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
 
-                <ErrorBoundary
-                  FallbackComponent={Fallback}
-                  onReset={() => {
-                    // reset state or retry logic
-                    console.log("Reset triggered");
-                  }}
-                >
+            {/* Overlay click closes modal */}
+            <div
+              className="absolute inset-0 bg-white/30 backdrop-blur-sm  h-screen"
+              onClick={() => setEditData(null)}
+            ></div>
 
-                  <ProductForm editData={editData} setEditData={setEditData} />
-                </ErrorBoundary>
-              </div>
+            {/* Modal content */}
+            <div
+              className="relative z-60 bg-white rounded-lg shadow  "
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ErrorBoundary
+                FallbackComponent={Fallback}
+                onReset={() => {
+                  console.log("Reset triggered");
+                }}
+              >
+                <ProductForm
+                  editData={editData}
+                  setEditData={setEditData}
+                />
+              </ErrorBoundary>
             </div>
 
           </div>
         )}
-
         {/* Desktop Table */}
         <div className="hidden md:block overflow-x-auto bg-white rounded-lg shadow">
           <table className="min-w-full text-sm text-gray-600">

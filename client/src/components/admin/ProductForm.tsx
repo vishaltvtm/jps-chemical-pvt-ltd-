@@ -72,22 +72,45 @@ export default function ProductForm({ editData, setEditData }: any) {
         setPrice(0)
         setGst(18)
     }
+
+    // option select 
+    const packSizes = [
+        { value: "amp", label: "Ampoule (AMP)" },
+        { value: "bag", label: "Bag (BAG)" },
+        { value: "box", label: "Box (BOX)" },
+        { value: "btl", label: "Bottle (BTL)" },
+        { value: "caps", label: "Capsule (CAPS)" },
+        { value: "drum", label: "Drum (DRUM)" },
+        { value: "gm", label: "Gram (GM)" },
+        { value: "kg", label: "Kilogram (KG)" },
+        { value: "ltr", label: "Litre (LTR)" },
+        { value: "mg", label: "Milligram (MG)" },
+        { value: "nos", label: "Numbers (NOS)" },
+        { value: "pkt", label: "Packet (PKT)" },
+        { value: "pcs", label: "Pieces (PCS)" },
+        { value: "roll", label: "Roll (ROLL)" },
+        { value: "strip", label: "Strip (STRIP)" },
+        { value: "tablet", label: "Tablet (TABLET)" },
+        { value: "na", label: "Not Applicable" },
+    ];
+
+
     return (
         <form
             onSubmit={handleSubmit}
             className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-2xl space-y-4"
         >
             <div className="flex justify-between items-center">
-               <h2 className="text-xl font-semibold text-gray-700">
+                <h2 className="text-xl font-semibold text-gray-700">
                     {editData ? "Edit Product" : "Add Product"}
-                </h2>  
+                </h2>
                 {
                     editData ? <>
                         <div className=" "><p className="p-3 bg-red-400 cursor-pointer" onClick={() => { setEditData(null) }}>Cancel</p></div>
                     </> : null
                 }
 
-               
+
             </div>
 
             {/* Product Name */}
@@ -205,14 +228,11 @@ export default function ProductForm({ editData, setEditData }: any) {
                             value={Pack_size_name}
                             onChange={(e) => setPack_size_name(e.target.value)}
                         >
-                            <option value="pc">Piece (pc)</option>
-                            <option value="nos">Numbers (nos)</option>
-                            <option value="roll">Roll</option>
-                            <option value="pkt">Packet (pkt)</option>
-                            <option value="kg">Kilogram (kg)</option>
-                            <option value="gm">Gram (gm)</option>
-                            <option value="ml">Millilitre (ml)</option>
-                            <option value="ltr">Litre (ltr)</option>
+                            {packSizes.map((item) => (
+                                <option key={item.value} value={item.value}>
+                                    {item.label}
+                                </option>
+                            ))}
                         </select>
                     </div>
 

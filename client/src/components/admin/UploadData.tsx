@@ -26,7 +26,8 @@ export default function UploadData() {
 
 
     const handleFileUpload = async (e: any) => {
-        const file = e.target.files[0];
+            const fileInput = e.target;
+            const file = fileInput.files[0];
         if (!file) return;
 
         const arrayBuffer = await file.arrayBuffer();
@@ -45,6 +46,7 @@ export default function UploadData() {
 
         if (missingColumns.length > 0) {
             alert(`Missing columns: ${missingColumns.join(", ")}`);
+             fileInput.value = ""; //  reset after success
             return;
         }
 
@@ -67,6 +69,7 @@ export default function UploadData() {
         const newData = [...products, ...formattedData];
         localStorage.setItem("products", JSON.stringify(newData));
         setProducts(newData);
+         fileInput.value = ""; //  reset after success
     };
 
     return (
