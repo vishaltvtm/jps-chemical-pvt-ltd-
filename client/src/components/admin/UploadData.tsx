@@ -62,7 +62,7 @@ export default function UploadData() {
             Pack_Size_Name: String(row["Pack_Size_Name"] || ""),
             Product_Price: String(row["Product_Price"] || ""),
             Quantity: String(row["Qty"] || ""),
-            GST:String(row["GST"] || "")
+            GST:String(row["GST"] || "18")
         }));
 
         setData(formattedData);
@@ -71,6 +71,9 @@ export default function UploadData() {
         setProducts(newData);
          fileInput.value = ""; //  reset after success
     };
+
+
+
 
     return (
         <>

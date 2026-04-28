@@ -79,6 +79,8 @@ export default function Cart() {
         });
 
         saveAs(file, "cart.xlsx");
+        localStorage.removeItem("productsCart");
+        setCart([])
     };
 
 

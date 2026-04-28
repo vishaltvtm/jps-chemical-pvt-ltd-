@@ -13,9 +13,55 @@ export default function ProductForm({ editData, setEditData }: any) {
     const [hazardous, setHazardous] = useState("NO")
     const [sbu_desc, setSbu_desc] = useState("")
     const [PackSize, setPackSize] = useState("")
-    const [Pack_size_name, setPack_size_name] = useState("pc")
+    const [Pack_size_name, setPack_size_name] = useState("amp")
     const [price, setPrice] = useState<number>(0)
     const [gst, setGst] = useState<number>(18)
+
+    // error 
+    const [errors, setErrors] = useState<any>({})
+    const validate = () => {
+        let newErrors: any = {}
+
+        if (!Product_Name.trim()) {
+            newErrors.Product_Name = "Product name is required"
+        }
+
+        if (!Product_Code || isNaN(Product_Code)) {
+            newErrors.Product_Code = "Valid product code required"
+        }
+
+        // if (!hsn || isNaN(hsn)) {
+        //     newErrors.HSN = "Valid HSN code required"
+        // }
+
+        // if (!cas.trim()) {
+        //     newErrors.CAS = "CAS number is required"
+        // }
+
+        if (!sbu_desc.trim()) {
+            newErrors.Product_Description = "Description required"
+        }
+
+        if (!PackSize || isNaN(parseFloat(PackSize))) {
+            newErrors.Pack_Size = "Valid pack size required"
+        }
+        if (price < 0) {
+            newErrors.Product_Price = "Price cannot be negative"
+        }
+        if (!price || isNaN(price)) {
+            newErrors.Product_Price = "Valid price required"
+        }
+
+        if (!gst || isNaN(gst)) {
+            newErrors.GST = "Valid GST required"
+        }
+
+        setErrors(newErrors)
+
+        return Object.keys(newErrors).length === 0
+    }
+
+    // --------------------------------------------
 
     useEffect(() => {
         if (editData) {
@@ -25,8 +71,8 @@ export default function ProductForm({ editData, setEditData }: any) {
             setCas(editData.CAS || "")
             setHazardous(editData.Hazardous || "NO")
             setSbu_desc(editData.Product_Description || "")
-            setPackSize(editData.Pack_Size?.toString() || "")
-            setPack_size_name(editData.Pack_Size_Name || "pc")
+            setPackSize((editData.Pack_Size || "").toString().replace(/[^\d.]/g, ""))
+            setPack_size_name(editData.Pack_Size_Name || "amp")
             setPrice(editData.Product_Price ?? 0)
             setGst(editData.GST ?? 18)
         }
@@ -36,6 +82,10 @@ export default function ProductForm({ editData, setEditData }: any) {
 
     const handleSubmit = (e: any) => {
         e.preventDefault()
+        if (!validate()) {
+            toast.error("Please Fill all Inputs details ")
+            return
+        }
 
         const product = {
             ID: editData ? editData.ID : Date.now().toString(),
@@ -45,7 +95,7 @@ export default function ProductForm({ editData, setEditData }: any) {
             CAS: cas,
             Hazardous: hazardous,
             Product_Description: sbu_desc,
-            Pack_Size: parseFloat(PackSize) || 0,
+            Pack_Size: parseFloat(PackSize),
             Pack_Size_Name: Pack_size_name,
             Product_Price: price,
             GST: gst
@@ -60,7 +110,8 @@ export default function ProductForm({ editData, setEditData }: any) {
             toast.success("Product added successfully 🎉")
         }
 
-        // reset form
+        setErrors({})
+        // reset form 
         setProduct_Name("")
         setProduct_Code(0)
         setHsn(0)
@@ -68,7 +119,7 @@ export default function ProductForm({ editData, setEditData }: any) {
         setHazardous("NO")
         setSbu_desc("")
         setPackSize("")
-        setPack_size_name("pc")
+        setPack_size_name("amp")
         setPrice(0)
         setGst(18)
     }
@@ -93,6 +144,7 @@ export default function ProductForm({ editData, setEditData }: any) {
         { value: "tablet", label: "Tablet (TABLET)" },
         { value: "na", label: "Not Applicable" },
     ];
+
 
 
     return (
@@ -123,6 +175,9 @@ export default function ProductForm({ editData, setEditData }: any) {
                     value={Product_Name || ""}
                     onChange={(e) => setProduct_Name(e.target.value)}
                 />
+                {errors.Product_Name && (
+                    <p className="text-red-500 text-sm">{errors.Product_Name}</p>
+                )}
                 <div>
                     <label className="block text-sm font-medium text-gray-600">
                         Product Code
@@ -133,6 +188,9 @@ export default function ProductForm({ editData, setEditData }: any) {
                         placeholder="0"
                         onChange={(e) => setProduct_Code(+e.target.value)}
                     />
+                    {errors.Product_Code && (
+                        <p className="text-red-500 text-sm">{errors.Product_Code}</p>
+                    )}
                 </div>
             </div>
 
@@ -203,6 +261,7 @@ export default function ProductForm({ editData, setEditData }: any) {
                     value={sbu_desc || ""}
                     onChange={(e) => setSbu_desc(e.target.value)}
                 />
+
             </div>
 
             {/* Pack Size + Price */}
@@ -217,12 +276,16 @@ export default function ProductForm({ editData, setEditData }: any) {
                             value={PackSize || ""}
                             placeholder="0"
                             onChange={(e) => {
-                                const value = e.target.value
-                                if (/^\d*\.?\d{0,5}$/.test(value)) {
-                                    setPackSize(value)
+                                const value = e.target.value;
+
+                                if (/^\d*\.?\d*$/.test(value)) {
+                                    setPackSize(value);
                                 }
                             }}
                         />
+                        {errors.Pack_Size && (
+                            <p className="text-red-500 text-sm">{errors.Pack_Size}</p>
+                        )}
                         <select
                             className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
                             value={Pack_size_name}
@@ -246,8 +309,13 @@ export default function ProductForm({ editData, setEditData }: any) {
                         placeholder="0"
                         className="mt-1 w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
                         value={price || ""}
-                        onChange={(e) => setPrice(+e.target.value)}
+                        onChange={(e) => {
+                            setPrice(+e.target.value)
+                        }}
                     />
+                    {errors.Pack_Size && (
+                        <p className="text-red-500 text-sm">{errors.Product_Price}</p>
+                    )}
                 </div>
 
                 <div>
