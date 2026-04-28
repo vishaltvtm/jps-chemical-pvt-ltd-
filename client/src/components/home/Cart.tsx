@@ -7,9 +7,6 @@ import * as XLSX from "xlsx";
 import { saveAs } from 'file-saver';
 
 
-
-
-
 export default function Cart() {
     const { cart, setCart, removeFromCart, updateQty } = useApp()
 
@@ -48,7 +45,7 @@ export default function Cart() {
             const igst = (itemTotal * item.GST) / 100;
 
             return {
-                ID: item.ID,
+                // ID: item.ID,
                 Product_Name: item.Product_Name,
                 Product_Code:item.Product_Code,
                 HSN: item.HSN,
@@ -61,6 +58,8 @@ export default function Cart() {
                 Qty: item.qty,
                 GST: item.GST,
                 IGST: igst,
+                CGST:"",
+                SGST:"",
                 Total: itemTotal + igst
             };
         });

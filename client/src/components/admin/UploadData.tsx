@@ -10,17 +10,17 @@ export default function UploadData() {
 
     // validation COLUMNS
     const REQUIRED_COLUMNS = [
-        "ID",
+        // "ID",
         "Product_Name",
         "Product_Code",
         "HSN",
         "CAS",
-        "Hazardous",
-        "Product_Description",
+        // "Hazardous",
+        // "Product_Description",
         "Pack_Size",
         "Pack_Size_Name",
         "Product_Price",
-        "Qty",
+        // "Qty",
         "GST",
     ];
 
@@ -48,23 +48,24 @@ export default function UploadData() {
             return;
         }
 
-        const formattedData = rows.map((row: any) => ({
-            ID: row["ID"] || Date.now().toString(),
-            Product_Name: row["Product_Name"] || "",
-            Product_Code: row["Product_Code"] || "",
-            HSN: row["HSN"] || "",
-            CAS: row["CAS"] || "",
-            Hazardous: row["Hazardous"] || "",
-            Product_Description: row["Product_Description"] || "",
-            Pack_Size: row["Pack_Size"] || "",
-            Pack_Size_Name: row["Pack_Size_Name"] || "",
-            Product_Price: row["Product_Price"] || "",
-            Quantity: row["Qty"] || "",
-            GST: row["GST"] || "",
+        const formattedData = rows.map((row: any,index: number) => ({
+            ID: `${Date.now().toString()}${row["Product_Code"]}${index}`,
+            Product_Name: String(row["Product_Name"] || ""),
+            Product_Code: String(row["Product_Code"] || ""),
+            HSN: String(row["HSN"] || ""),
+            CAS: String(row["CAS"] || ""),
+            Hazardous: String(row["Hazardous"] || "No"),
+            Product_Description: String(row["Product_Description"] || ""),
+            Pack_Size: String(row["Pack_Size"] || ""),
+            Pack_Size_Name: String(row["Pack_Size_Name"] || ""),
+            Product_Price: String(row["Product_Price"] || ""),
+            Quantity: String(row["Qty"] || ""),
+            GST:String(row["GST"] || "")
         }));
 
         setData(formattedData);
         const newData = [...products, ...formattedData];
+        localStorage.setItem("products", JSON.stringify(newData));
         setProducts(newData);
     };
 

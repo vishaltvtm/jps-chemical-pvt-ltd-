@@ -3,6 +3,8 @@ import { useApp } from "@/context/AppContext"
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import SearchProduct from "./SearchProduct";
+import Fallback from "../errorBoundary";
+import { ErrorBoundary } from "react-error-boundary";
 
 export default function HomeProductList() {
     const { products, addToCart } = useApp()
@@ -20,22 +22,32 @@ export default function HomeProductList() {
         }
     }, [search])
 
-    const filteredProducts = Array.isArray(products)
+   const filteredProducts = Array.isArray(products)
   ? [...products].reverse().filter((p: any) => {
-        const query = debouncedSearch.toLowerCase()
+        const query = debouncedSearch.toLowerCase();
 
         return (
-            p?.Product_Name?.toLowerCase().includes(query) ||
-            p?.Product_Code?.toLowerCase().includes(query) ||
-            p?.HSN?.toLowerCase().includes(query) ||
-            p?.CAS?.toLowerCase().includes(query)
-        )
-    }) : []
+            String(p?.Product_Name || "").toLowerCase().includes(query) ||
+            String(p?.Product_Code || "").toLowerCase().includes(query) ||
+            String(p?.HSN || "").toLowerCase().includes(query) ||
+            String(p?.CAS || "").toLowerCase().includes(query)
+        );
+    })
+  : [];
 
     return (
         <div>
             <div>
+                  <ErrorBoundary
+                          FallbackComponent={Fallback}
+                          onReset={() => {
+                            // reset state or retry logic
+                            console.log("Reset triggered");
+                          }}
+                        > 
+                
                 <SearchProduct search={search} setSearch={setSearch} />
+                        </ErrorBoundary>
             </div>
             <table className="min-w-full text-sm text-left text-gray-600">
 

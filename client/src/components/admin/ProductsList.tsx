@@ -4,6 +4,8 @@ import log from "@/utils/ConsoleLog"
 import { useEffect, useState } from "react"
 import ProductForm from "./ProductForm"
 import SearchProduct from "../home/SearchProduct"
+import Fallback from "../errorBoundary"
+import { ErrorBoundary } from "react-error-boundary"
 
 export default function ProductsList() {
   const { products, setProducts, deleteProduct } = useApp()
@@ -35,17 +37,18 @@ export default function ProductsList() {
     }
   }, [search])
 
-  const filteredProducts = Array.isArray(products)
-    ? [...products].reverse().filter((p: any) => {
-      const query = debouncedSearch.toLowerCase()
+   const filteredProducts = Array.isArray(products)
+  ? [...products].reverse().filter((p: any) => {
+        const query = debouncedSearch.toLowerCase();
 
-      return (
-        p?.Product_Name?.toLowerCase().includes(query) ||
-        p?.Product_Code?.toLowerCase().includes(query) ||
-        p?.HSN?.toLowerCase().includes(query) ||
-        p?.CAS?.toLowerCase().includes(query)
-      )
-    }) : []
+        return (
+            String(p?.Product_Name || "").toLowerCase().includes(query) ||
+            String(p?.Product_Code || "").toLowerCase().includes(query) ||
+            String(p?.HSN || "").toLowerCase().includes(query) ||
+            String(p?.CAS || "").toLowerCase().includes(query)
+        );
+    })
+  : [];
 
 
   return (
@@ -53,12 +56,36 @@ export default function ProductsList() {
       <div className="p-4 space-y-4">
 
         {/* Search */}
-        <SearchProduct search={search} setSearch={setSearch} />
+        <ErrorBoundary
+          FallbackComponent={Fallback}
+          onReset={() => {
+            // reset state or retry logic
+            console.log("Reset triggered");
+          }}
+        >
+
+          <SearchProduct search={search} setSearch={setSearch} />
+        </ErrorBoundary>
 
         {/* Edit Form */}
         {editData && (
-          <div className="bg-white p-4 rounded-lg shadow">
-            <ProductForm editData={editData} setEditData={setEditData} />
+          <div className="bg-white p-4 rounded-lg shadow ">
+            <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50">
+              <div className="shadow w-full relative">
+
+                <ErrorBoundary
+                  FallbackComponent={Fallback}
+                  onReset={() => {
+                    // reset state or retry logic
+                    console.log("Reset triggered");
+                  }}
+                >
+
+                  <ProductForm editData={editData} setEditData={setEditData} />
+                </ErrorBoundary>
+              </div>
+            </div>
+
           </div>
         )}
 
@@ -89,15 +116,15 @@ export default function ProductsList() {
 
                     <td className="px-4 py-3">
                       <p className="font-medium text-gray-800">
-                        {p.Product_Name} {p.Product_Code}
+                        {p.Product_Name}  {p.Product_Code}
                       </p>
                       <p className="text-xs text-gray-500">
                         HSN: {p.HSN} | CAS: {p.CAS}
                       </p>
                       <span
                         className={`inline-block mt-1 px-2 py-0.5 text-xs rounded-full ${p.Hazardous === "YES"
-                            ? "bg-red-100 text-red-600"
-                            : "bg-green-100 text-green-600"
+                          ? "bg-red-100 text-red-600"
+                          : "bg-green-100 text-green-600"
                           }`}
                       >
                         {p.Hazardous}
@@ -153,8 +180,8 @@ export default function ProductsList() {
                   </h2>
                   <span
                     className={`px-2 py-0.5 text-xs rounded-full ${p.Hazardous === "YES"
-                        ? "bg-red-100 text-red-600"
-                        : "bg-green-100 text-green-600"
+                      ? "bg-red-100 text-red-600"
+                      : "bg-green-100 text-green-600"
                       }`}
                   >
                     {p.Hazardous}
